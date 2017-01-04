@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="lib/vue.js"></script>
+    <style>
+        #todo{
+            margin:10px auto;
+            width:600px;
+        }
+    </style>
+</head>
+<body>
+ <div id="todo">
+     <input id="txt" type="text" v-model="msg">
+     <input type="button" value="submit"  v-on:click="addItem">
+     <ul>
+         <li v-for="todo in todos" v-bind:msg="todo">
+             {{ todo}}
+         </li>
+     </ul>
+ </div>
+ <script>
+     var app= new Vue({
+         el: '#todo',
+         data: {
+             msg:'',
+             todos: ['Learn JavaScript','Learn Vue.js',
+                'Build Something Awesome'
+             ]
+         },
+         methods:{
+             addItem:function(){
+                 this.todos.push(this.msg);
+                 this.msg="";
+             }
+         }
+     });
+ </script>
+</body>
+</html>

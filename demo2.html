@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="lib/vue.js"></script>
+    <style>
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 3.5s
+        }
+        .fade-enter, .fade-leave-active {
+            opacity: 0
+        }
+    </style>
+</head>
+<body>
+<div id="todo-list-example">
+    <input
+            v-model="newTodoText"
+            v-on:keyup.enter="addNewTodo"
+            placeholder="Add a todo"
+            >
+    <ul>
+        <li
+                is="todo-item"
+                v-for="(todo, index) in todos"
+                v-bind:title="todo"
+                v-on:remove="todos.splice(index, 1)"
+                ></li>
+    </ul>
+</div>
+<div id="demo">
+    <button v-on:click="show = !show">
+        Toggle
+    </button>
+    <transition name="fade">
+        <p v-if="show">hello</p>
+    </transition>
+</div>
+<script>
+    Vue.component('todo-item', {
+        template: '\
+    <li>\
+      {{ title }}\
+      <button v-on:click="$emit(\'remove\')">X</button>\
+    </li>\
+  ',
+        props: ['title']
+    });
+    new Vue({
+        el: '#todo-list-example',
+        data: {
+            newTodoText: '',
+            todos: [
+                'Do the dishes',
+                'Take out the trash',
+                'Mow the lawn'
+            ]
+        },
+        methods: {
+            addNewTodo: function () {
+                this.todos.push(this.newTodoText)
+                this.newTodoText = ''
+            }
+        }
+    });
+    new Vue({
+        el: '#demo',
+        data: {
+            show: true
+        }
+    })
+</script>
+</body>
+</html>
