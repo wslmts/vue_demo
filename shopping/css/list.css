@@ -1,0 +1,32 @@
+*{
+    margin:0;
+    padding:0
+}
+#wrap{
+    width:960px;
+    margin:0 auto;
+}
+ul{
+    list-style: none;
+}
+li span{
+    display: inline-block;
+}
+li input{
+    width:20px;
+}
+.index{
+    width:60px;
+}
+.name,.number,.price,.total,.operator{
+    width:150px;
+    text-align: center;
+}
+li .radio{
+    width:30px;
+    height:15px;
+    background: url("../img/radio.png") no-repeat;
+}
+li .radio.click{
+    background-position:0 -25px;
+}

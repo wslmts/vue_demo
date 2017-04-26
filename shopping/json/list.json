@@ -1,0 +1,9 @@
+{
+  "list":[
+    {"name":"苹果","number":2,"price":2},
+    {"name":"香蕉","number":1,"price":7},
+    {"name":"橘子","number":3,"price":5},
+    {"name":"草莓","number":2,"price":1},
+    {"name":"橙子","number":1,"price":3}
+  ]
+}
