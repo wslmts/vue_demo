@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/list.css">
+    <script src="lib/vue.js"></script>
+    <script src="lib/vue-resource.js"></script>
+</head>
+<body>
+<div id="wrap"><h3>{{title}}</h3>
+<ul  class="block">
+    <li v-for="(item,index) in limitedList">
+       <div>收货人：{{item.name}}</div>
+       <div>地址：{{item.city}}</div>
+       <div>联系方式：{{item.phone}}</div>
+    </li>
+</ul>
+    <a v-if="list.length>showCount" @click="showCount=list.length">more</a>
+</div>
+<script src="js/address.js"></script>
+</body>
+</html>

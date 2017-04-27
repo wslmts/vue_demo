@@ -30,3 +30,8 @@ li .radio{
 li .radio.click{
     background-position:0 -25px;
 }
+ul.block li{
+    display:inline-block;
+    width:300px;
+    padding:10px;
+}
