@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div>
+    The little quote sign just after template-- ` --is in reality a back tick. It doesn't
+    exist in all the keyboards; if you don't find it in yours, you will have to copy
+    and paste it. It's part of ES6 syntax, and it tells the browser (or transpiler) that
+    the string may span more than one line.
+</div>
+<div id="app">
+    <light-bulb></light-bulb>
+    <light-bulb></light-bulb>
+    <light-bulb-g></light-bulb-g>
+    <light-bulb-instance></light-bulb-instance>
+    <light-bulb-instance></light-bulb-instance>
+</div>
+<script>
+    Vue.component('light-bulb', {
+        template: `
+    <div class='light-bulb'>
+            <p> 全局组件</p>
+    </div>
+    `
+    });
+//全局组件另一种写法
+    Vue.component('light-bulb-g', {
+        functional: true,
+        render (createElement) {
+        return createElement(
+                'div',
+                { class: 'light-bulb' },
+                [
+                    createElement('p', ' 全局组件另一种写法!')
+                ]
+        )
+    }
+    });
+    new Vue({
+        el: '#app',
+        components: {
+            'light-bulb-instance': {
+                template: `
+    <div class='light-bulb'>
+            <p> 实例组件</p>
+    </div>
+    `
+    }
+        }
+    })
+</script>
+<div id="app1">
+    In our child component, we didn't use the usual syntax to declare the data. In
+    child components, the  data option is a function. We have only one instance of a
+    Vue, so an object will do the job. We can have multiple instances of children
+    objects; so if we use an object, the same object will be shared among them. We
+    want a different object for each child component, and the right way to achieve
+    this is by calling a function at every instantiation--the  data function.
+    <label>Sound level</label>
+    <input type="number" v-model.number="soundLevel">
+    <sound-icon :sound-level="soundLevel"></sound-icon>
+</div>
+<script>
+    Vue.component('sound-icon', {
+        template: "<span>{{soundEmojis[soundLevel]}}</span>",
+      //  props: ['soundLevel'],
+        props:{
+            soundLevel: {
+                type: Number
+            }
+        },
+        data () {
+        return {
+            soundEmojis: ['v1 ', 'v2 ', ' v3', 'vq ']
+        }
+    }
+    })
+    new Vue({
+        el: '#app1',
+        data: {
+            soundLevel: 0
+        }
+    })
+</script>
+<div id="app2">
+    <blabber></blabber>
+    <blabber></blabber>
+</div>
+<script>
+    var line = 0;
+    Vue.component('blabber', {
+        template: "<p>{{dialogue[currentLine]}}</p>",
+        data () {
+        return {
+            currentLine: 0,
+            dialogue: [
+                'hello',
+                'how are you?',
+                'fine thanks',
+                'let\'s go drink!',
+                'alright, where?',
+                'to hello\'s bar',
+                'hello?'
+            ]
+        }
+    },
+    mounted () {
+        setInterval(() => {
+            this.currentLine = line % this.dialogue.length
+        line += 1
+    }, 2000)
+    }
+    });
+    new Vue({
+        el: '#app2'
+    })
+</script>
+<div id="app3">
+    <blabber1 :ice-breaker="true"></blabber1>
+    <blabber1></blabber1>
+</div>
+<script>
+    var bus = new Vue()
+    Vue.component('blabber1', {
+        template: "<p>{{dialogue[currentLine]}}</p>",
+        props: {
+            iceBreaker: {
+                type: Boolean,
+                default: false
+            }
+        },
+        data () {
+        return {
+            currentLine: this.iceBreaker ? 0 : -1,
+            dialogue: [
+                'hello',
+                'how are you?',
+                'fine thanks',
+                'let\'s go drink!',
+                'alright, where?',
+                'to hello\'s bar',
+                'hello?'
+            ]
+        }
+    },
+    mounted () {
+        if (this.iceBreaker) {
+            bus.$emit('line', 0)
+        }
+    },
+    created () {
+        bus.$on('line', line => {
+// is not the line I just sent
+            if (line !== this.currentLine) {
+            setTimeout(() => {
+                this.currentLine = (line + 1) % this.dialogue.length
+            bus.$emit('line', this.currentLine)
+        }, 2000)
+    }
+    })
+    }
+    });
+    new Vue({
+        el: '#app3'
+    })
+</script>
+
+</body>
+</html>

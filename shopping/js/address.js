@@ -3,7 +3,8 @@ new Vue({
     data:{
         title:'settle',
         list:[],
-        showCount:3
+        showCount:3,
+        currentIndex:0
     },
     mounted:function(){
         this.getList();

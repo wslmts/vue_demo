@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="lib/jasmine.css">
+    <script src="../lib/vue.js"></script>
+    <script src="lib/jasmine.js"></script>
+    <script src="lib/jasmine-html.js"></script>
+    <script src="lib/boot.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>{{greeting}}</p>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            greeting: 'Hello World!'
+        }
+    });
+    describe('my app', () => {
+        it('should say Hello World', () => {
+            expect(document.querySelector('p').innerText)
+                    .toContain('Hello World')
+        })
+    })
+</script>
+</body>
+</html>

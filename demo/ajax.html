@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/axios.js"></script>
+    <style>
+        @keyframes spin {
+            100% {transform:rotate(360deg);}
+        }
+        .spinner {
+            width: 1em;
+            height: 1em;
+            padding-bottom: 12px;
+            display: inline-block;
+            animation: spin 2s linear infinite;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h2>Advice of the day</h2>
+    <p>{{advice}}</p>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            advice: 'loading...'
+        },
+        created () {
+            axios.get('http://api.adviceslip.com/advice')
+                    .then(response => {
+                this.advice = response.data.slip.advice
+        }).catch(error => {
+                this.advice = 'There was an error: ' + error.message
+            })
+    }
+    })
+</script>
+<div id="app1">
+    <h3>Everest pizza delivery</h3>
+    <button @click="order"
+            :disabled="inProgress">Order pizza!</button>
+    <span class="spinner" v-show="inProgress"> </span>
+    <h4>Pizza wanted</h4>
+    <p>{{requests}}</p>
+    <h4>Pizzas ordered</h4>
+<span v-for="pizza in responses">
+{{pizza.id}}:{{pizza.req}}
+</span>
+</div>
+<script>
+    new Vue({
+        el: '#app1',
+        data: {
+            inProgress: false,
+            requests: new Object(null),
+            responses: new Object(null),
+            counter: 0,
+            impatientAxios: undefined
+        },
+        created () {
+        this.impatientAxios = axios.create({
+            timeout: 3000
+        })
+      },
+    methods: {
+        order(event, oldRequest)
+        {
+            let request = undefined
+            if (oldRequest) {
+                request = oldRequest
+            } else {
+                request = {req: 'pizza', id: this.counter++}
+            }
+            this.inProgress = true
+            this.requests[request.id] = request
+            this.impatientAxios.get('http://httpstat.us/200')
+                    .then(response => {
+                this.inProgress = false
+            this.responses[request.id] = this.requests[request.id]
+            delete this.requests[request.id]
+        }
+    ).catch(e => {
+            this.inProgress = false
+        console.error(e.message)
+        console.error(this.requests.s)
+        setTimeout(this.order(event, request), 1000)
+    }
+    )
+    }
+    }
+    })
+</script>
+<div id="app2">
+    <p v-for="word in words">{{word}}</p>
+</div>
+<script>
+    new Vue({
+        el: '#app2',
+        data: {
+            bottom: false,
+            words: []
+        },
+        watch: {
+            bottom (bottom) {
+            if (bottom) {
+                this.addWord()
+            }
+        }
+       },
+        created () {
+            window.addEventListener('scroll', () => {
+                this.bottom = this.bottomVisible()
+        });
+        this.addWord();
+        },
+        methods: {
+            bottomVisible () {
+                const visibleHeight = document.documentElement.clientHeight
+                const pageHeight = document.documentElement.scrollHeight
+                const scrolled = window.scrollY
+                const reachedBottom = visibleHeight + scrolled >= pageHeight
+                return reachedBottom || pageHeight < visibleHeight
+            },
+            addWord () {
+                axios.get('http://www.setgetgo.com/randomword/get.php')
+                        .then(response => {
+                    this.words.push(response.data)
+                    if (this.bottomVisible()) {
+                        this.addWord()
+                    }
+                  })
+            }
+       }
+    })
+</script>
+</body>
+</html>

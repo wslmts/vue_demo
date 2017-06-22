@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .frame {
+            border: 5px dashed dodgerblue;
+            width: 300px;
+        }
+        h3 {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 2px 0;
+            width: 100%;
+        }
+        h3, figcaption {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 2px 0;
+            width: 100%;
+        }
+        .organogram {
+            border: 5px dashed dodgerblue;
+            width: 300px;
+        }
+        .boss {
+            border: 5px double mediumvioletred;
+        }
+        .employee {
+            border: 2px outset lightgrey;
+        }
+        figcaption, h3 {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 2px 0;
+            width: 100%;
+        }
+        .r1 {
+            font-size: 1.5em;
+            color: red;
+        }
+        .r2 {
+            font-size: 1.2em;
+            color: blue;
+        }
+    </style>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <framed>
+        <cat :name="catName"></cat>
+    </framed>
+</div>
+<script>
+    Vue.component('framed', {
+        template: `<div class="frame">
+            <h3>Russian cat mafia
+    employee of the month</h3>
+    <slot>Nothing framed.</slot>
+    </div>`
+    });
+    Vue.component('cat', {
+        template: `<div>
+        <figure>
+        <img src="./img/QDpnaIE.png"/>
+                <figcaption>{{name}}</figcaption>
+        </figure>
+        </div>`,
+        props: ['name']
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            names: ['Murzik', 'Pushok', 'Barsik', 'Vaska', 'Matroskin']
+        },
+        computed: {
+            catName () {
+        return this.names[Math.floor(Math.random() *
+                this.names.length)]
+       }
+    }
+    })
+</script>
+<div id="app1">
+    <organogram>
+        <div slot="boss">
+            <figure>
+                <img src="./img/QDpnaIE.png"/>
+                <figcaption>boss</figcaption>
+            </figure>
+        </div>
+        <cat slot="employee" :name="catName"></cat>
+    </organogram>
+</div>
+<script>
+    Vue.component('organogram', {
+        template: `<div class="organogram">
+            <h3>Scratchy co.</h3>
+    <div class="boss">
+            <h3>Boss</h3>
+            <slot name="boss">No boss</slot>
+    </div>
+    <div class="employee">
+            <h3>Employee</h3>
+            <slot name="employee">No employee</slot>
+    </div>
+    </div>`
+    });
+    Vue.component('cat', {
+        template: `<div>
+    <figure>
+    <img src="./img/QDpnaIE.png"/>
+            <figcaption>{{name}}</figcaption>
+    </figure>
+    </div>`,
+    props: ['name']
+    });
+    new Vue({
+        el: '#app1',
+        data: {
+            names: ['Murzik', 'Pushok', 'Barsik', 'Vaska', 'Matroskin']
+        },
+        computed: {
+            catName () {
+        return this.names[Math.floor(Math.random() *
+                this.names.length)]
+    }
+    }
+    })
+</script>
+<div id="app2">
+    <organogram>
+        <template scope="props">
+            <div v-if="props.type === 'boss'">
+                <figure>
+                    <img src="http://lorempixel.com/210/210/cats/1"/>
+                    <figcaption>Sylvester</figcaption>
+                </figure>
+            </div>
+            <div v-else-if="props.type === 'employee'" :class="'r' + props.rank">
+                <cat :name="catName"></cat>
+            </div>
+        </template>
+    </organogram>
+</div>
+<script>
+
+    Vue.component('organogram', {
+        template: `
+            <div class="organogram">
+                    <h3>Scratchy co.</h3>
+            <div class="boss">
+                    <h3>Boss</h3>
+                    <slot type="boss">No boss</slot>
+            </div>
+            <div class="employee" v-for="rank in 2">
+                    <h3>Employee</h3>
+                    <slot type="employee" :rank="rank" >No employee </slot>
+            </div>
+            </div>`
+    });
+    Vue.component('cat', {
+        template: `
+    <div>
+    <figure>
+    <img :src="'http://lorempixel.com/220/220/cats/?' + name"/>
+            <figcaption>{{name}}</figcaption>
+    </figure>
+    </div>
+    `,
+    props: ['name']
+    })
+    new Vue({
+        el: '#app2',
+        data: {
+            names: ['Murzik', 'Pushok', 'Barsik', 'Vaska', 'Matroskin']
+        },
+        computed: {
+            catName () {
+        return this.names[Math.floor(Math.random() *
+                this.names.length)]
+    }
+    }
+    })
+</script>
+</body>
+</html>

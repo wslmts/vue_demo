@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+
+    </style>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <form>
+        <label>
+            <label>
+                <input type="checkbox" v-model="outputPrinter" value="monochrome"/> Monochrome</label><br>
+            <label>
+                <input type="checkbox" v-model="outputPrinter" value="plasma"/>                Plasma Color</label><br>
+            <label>
+                <input type="checkbox" v-model="outputPrinter" value="cloner"/>                3D DNA Cloner</label><br>
+            <input type="submit" value="Print now" @click.prevent="printHandler"/>
+        </label>
+    </form>
+    <div>{{outputPrinter}}</div>
+</div>
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            outputPrinter: []
+        },
+        methods: {
+            printHandler () {
+        let printers = this.outputPrinter
+        alert('Printing with: ' +
+                (printers.length ? printers.join(', ') : 'none') + '.')
+    }
+    }
+    })
+</script>
+<div id="app1">
+    <form>
+        <fieldset>
+            <legend>Choose your gender</legend>
+            <!--<label>
+                <input type="radio" v-model="gender" value="male"/>
+                Male
+            </label><br>
+            <label>
+                <input type="radio" v-model="gender" value="female"/>
+                Female
+            </label> <br>
+            <label>
+                <input type="radio" v-model="gender" value="alien"/>
+                Alien
+            </label>-->
+            <label v-for="v in genders">
+                <input type="radio"   v-model="gender" v-bind:value="v"/>
+                {{v}}
+            </label><br>
+
+        </fieldset>
+    </form>
+    <div>
+        Choosen gender: '{{ gender }}'
+    </div>
+</div>
+<script>
+    new Vue({
+        el: '#app1',
+        data: {
+            genders: ['male', 'female', 'alien'],
+            gender: undefined
+        }
+    })
+</script>
+<div id="app2">
+    <label>
+        <input type="radio" v-model="animal" :value="animals[i]"/>
+        {{animals[i]}}
+    </label><br>
+    <label>
+        <input type="radio" v-model="animal" :value="animals[i+1]"/>
+        {{animals[i+1]}}
+    </label><br>
+    <div>
+        Your farm is composed by {{ farm.join(' ') }}
+    </div>
+    <input type="submit" value="Add to Farm" @click.prevent="addToFarm"/>
+</div>
+<script>
+    new Vue({
+        el: '#app2',
+        data:{
+            animals: ['aaa', 'bbb', 'ccc'],
+            animal: undefined,
+            farm: [],
+            i: 0
+        },
+        methods:{
+            addToFarm () {
+        if (this.animal === undefined) { return }
+        this.farm.push(this.animal)
+        this.i = Math.floor(Math.random() * (this.animals.length - 1))
+        this.animal = undefined
+    }
+        }
+    })
+</script>
+<div id="app3">
+    <select v-model="choosenCountry">
+        <option value="1">Japan</option>
+        <option value="2">India</option>
+        <option value="7">Canada</option>
+    </select>
+    <div>{{choosenCountry}}</div>
+</div>
+<script>
+    new Vue({
+        el:'#app3',
+        data:{
+            choosenCountry: undefined
+        }
+    })
+</script>
+<div id="app4">
+    <select v-model="clan">
+        <option v-for="(types, clan) in clans">{{clan}}</option>
+    </select>
+    <select v-model="type">
+        <option v-for="(species, type) in clans[clan]">{{type}}</option>
+    </select>
+    <select v-if="clans[clan]">
+        <option v-for="(animals, species) in clans[clan][type]">{{species}}
+        </option>
+    </select>
+</div>
+<script>
+    new Vue({
+        el:'#app4',
+        data:{
+            clan: undefined,
+            type: undefined,
+            clans: {
+                mammalia: {
+                    'have fingers': {
+                        human: 'human',
+                        chimpanzee: 'chimpanzee'
+                    },
+                    'fingerless': {
+                        cat: 'cat',
+                        bear: 'bear'
+                    }
+                },
+                birds: {
+                    flying: {
+                        eagle: 'eagle',
+                        pidgeon: 'pidgeon'
+                    },
+                    'non flying': {
+                        chicken: 'chicken'
+                    }
+                }
+            }
+        }
+    })
+</script>
+ </body>
+</html>

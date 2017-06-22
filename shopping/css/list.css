@@ -35,3 +35,6 @@ ul.block li{
     width:300px;
     padding:10px;
 }
+ul.block li.click{
+  border:1px solid #ec674a;
+}

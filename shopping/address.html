@@ -10,7 +10,7 @@
 <body>
 <div id="wrap"><h3>{{title}}</h3>
 <ul  class="block">
-    <li v-for="(item,index) in limitedList">
+    <li v-for="(item,index) in limitedList" :class="{click:currentIndex===index}" @click="currentIndex=index">
        <div>收货人：{{item.name}}</div>
        <div>地址：{{item.city}}</div>
        <div>联系方式：{{item.phone}}</div>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/vue-router.js"></script>
+    <script src="../lib/axios.js"></script>
+    <style>
+        .v-enter-active, .v-leave-active {
+            transition: opacity .5s;
+        }
+        .v-enter, .v-leave-active {
+            opacity: 0
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>Ghost's Restaurant</h1>
+    <ul>
+        <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/menu">Menu</router-link></li>
+    </ul>
+    <transition mode="out-in">
+        <router-view></router-view>
+    </transition>
+</div>
+
+<script>
+    Vue.use(VueRouter);
+    const Home = { template: '<div>Welcome to Ghost\'s</div>' }
+    const Menu = { template: '<div>Today: invisible cookies</div>' }
+   /* If we want a different transition for every component, we have an alternate
+    option: we have to wrap the individual components inside transitions
+    themselves.
+            Let's say, for example, that we have two transitions: spooky and delicious. We
+    want to apply the first when the  Home component appears, and the second when
+    the  Menu component appears.
+            We need to modify our components, as follows:*/
+   /* const Home = { template: `
+    <transition name="spooky">
+            <div>Welcome to Ghost's</div>
+    </transition>
+    ` }
+    const Menu = { template: `
+    <transition name="delicious">
+            <div>Today: insisible cookies!</div>
+    </transition>
+    ` }*/
+    const router = new VueRouter({
+        routes: [
+            { path: '/', component: Home },
+            { path: '/menu', component: Menu }
+        ]
+    })
+    new Vue({
+        router,
+        el: '#app'
+    })
+</script>
+</body>
+</html>

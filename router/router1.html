@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/vue-router.js"></script>
+    <script src="../lib/axios.js"></script>
+    <style>
+        a.router-link-active, li.router-link-active>a {
+            background-color: gainsboro;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <h1>My Portfolio</h1>
+    <ul>
+        <li><router-link to="/" exact>Home</router-link></li>
+        <li><router-link to="/aboutme">About Me</router-link></li>
+    </ul>
+    <router-view></router-view>
+</div>
+<script>
+    Vue.use(VueRouter);
+    const Home = { template: '<div>This is my home page</div>' }
+    const AboutMe = {
+        template: `<div>Name:{{name}}<br>Phone:{{phone}}</div>`,
+        data () {
+            return {
+                name: undefined,
+                phone: undefined
+            }
+        },
+        beforeRouteEnter (to, from, next) {
+        console.log('to ',to);
+        console.log('from ',from)
+        console.log('next ',next)
+            axios.post('https://schematic-ipsum.herokuapp.com/', {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "ipsum": "name"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "format": "phone"
+                    }
+                }
+            }).then(response => {
+                next(vm => {
+                    vm.name = response.data.name
+                    vm.phone = response.data.phone
+        })
+        })
+        }
+    }
+
+    const router = new VueRouter({
+        routes: [
+            { path: '/', component: Home },
+            { path: '/aboutme', component: AboutMe }
+        ]
+    });
+    new Vue({
+        router,
+        el: '#app'
+    })
+</script>
+</body>
+</html>

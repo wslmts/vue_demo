@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/vue-router.js"></script>
+    <script src="../lib/axios.js"></script>
+    <style>
+        a.router-link-active, li.router-link-active>a {
+            background-color: gainsboro;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <router-link to="/green-dress-01/">Valentino</router-link>
+    <router-link to="/green-purse-A2/">Prada</router-link>
+    <h1>Clothes Shop</h1>
+    <router-link to="/red-dress-01/">Valentino</router-link>
+    <router-link to="/red-purse-A2/">Prada</router-link>
+    <router-view></router-view>
+</div>
+<script>
+    Vue.use(VueRouter);
+    const Valentino01 = { template: '<div class="emoji">Valentino01</div>' }
+    const PradaA2 = { template: '<div class="emoji">PradaA2</div>' }
+    const router = new VueRouter({
+        routes: [
+            {
+                path: '/red-dress-01',
+                component: Valentino01,
+                alias: '/green-dress-01'
+            },
+            {
+                path: '/red-purse-A2',
+                component: PradaA2,
+                alias: '/green-purse-A2'
+            }
+        ]
+    })
+
+    new Vue({
+        router,
+        el: '#app',
+        data: {
+            Stark: {
+                soldiers: 100,
+                gold: 50
+            },
+            Lannister: {
+                soldiers: 50,
+                gold: 100
+            }
+        }
+    })
+</script>
+</body>
+</html>

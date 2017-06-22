@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <child ref="junior"></child>
+    <p>Truth: {{childStomach}}</p>
+</div>
+<script>
+    Vue.component('child', {
+        template: "<p>{{mouth}}</p>",
+        data () {
+        return {
+            mouth: 'I didn\'t eat that cookie',
+            stomach: 'Yummy that cookie was delicious.'
+          }
+       }
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            childStomach: 'unknown'
+        },
+        mounted () {
+        this.childStomach = this.$refs.junior.stomach
+    }
+    })
+</script>
+
+<div id="app1">
+    <child1 v-for="i in 10" ref="junior1" :num="i" :count='i' :key="i"></child1>
+    <p>Truth for child 4: ---{{child4Stomach}}</p>
+</div>
+
+<script>
+    Vue.component('child1', {
+        template: "<p>Child {{num}}: {{mouth}}</p>",
+        props: ['num','count'],
+        data () {
+        return {
+            mouth: 'I didn’t eat that cookie',
+            stomach: `Yummy that cookie was ${this.num} times more delicious=${this.count}.`
+    }
+    }
+    })
+    new Vue({
+        el: '#app1',
+        data: {
+            child4Stomach: 'unknown'
+        },
+        mounted () {
+        this.child4Stomach = this.$refs.junior1[3].stomach
+    }
+    })
+</script>
+
+</body>
+</html>

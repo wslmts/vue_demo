@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../lib/magic.css">
+    <style>
+        .card {
+            position: relative;
+            background-color: FloralWhite;
+            width: 9em;
+            height: 9em;
+            margin: 0.5em;
+            padding: 0.5em;
+            font-family: sans-serif;
+            box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.3);
+        }
+    </style>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <button @click="showRecipe = !showRecipe">
+        Recipe
+    </button>
+    <button @click="showNews= !showNews">
+        Breaking News
+    </button>
+    <article v-if="showRecipe" class="card">
+        <h3>
+            Apple Pie Recipe
+        </h3>
+        <p>
+            Ingredients: apple pie. Procedure: serve hot.
+        </p>
+    </article>
+    <article v-if="showNews" class="card">
+        <h3>
+            Breaking news
+        </h3>
+        <p>
+            Donald Duck is the new president of the USA.
+        </p>
+    </article>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            showRecipe: false,
+            showNews: false
+        }
+    })
+</script>
+<div id="app1">
+    <button @click="showRecipe = !showRecipe">
+        Recipe
+    </button>
+    <button @click="showNews = !showNews">
+        Breaking News
+    </button>
+    <puff>
+        <article v-if="showRecipe" class="card">
+            <h3>
+                Apple Pie Recipe
+            </h3>
+            <p>
+                Ingredients: apple pie. Procedure: serve hot.
+            </p>
+        </article>
+    </puff>
+    <puff>
+        <article v-if="showNews" class="card">
+            <h3>
+                Breaking news
+            </h3>
+            <p>
+                Donald Duck is the new president of the USA.
+            </p>
+        </article>
+    </puff>
+</div>
+<script>
+    Vue.component('puff', {
+        functional: true,
+        render: function (createElement, context) {
+            var data = {
+                props: {
+                    'enter-active-class': 'magictime puffIn',
+                    'leave-active-class': 'magictime puffOut'
+                }
+            }
+            return createElement('transition', data, context.children)
+        }
+    });
+    new Vue({
+        el: '#app1',
+        data: {
+            showRecipe: false,
+            showNews: false
+        },
+        props: {
+            'enter-active-class': 'magictime puffIn',
+            'leave-active-class': 'magictime puffOut'
+        }
+    })
+</script>
+<style>
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-active {
+        opacity: 0
+    }
+    .zoom-leave-active, .zoom-enter-active {
+        transition: transform .5s;
+    }
+    .zoom-leave-active, .zoom-enter {
+        transform: scale(0)
+    }
+</style>
+<div id="app3">
+    <button @click="kisses++"> Kiss!</button>
+    <transition :name="kindOfTransformation" :mode="transformationMode">
+        <p :key="transformation">{{emoji}}{{transformation}}</p>
+    </transition>
+</div>
+<script>
+    new Vue({
+        el: '#app3',
+        data: {
+            kisses: 0,
+            kindOfTransformation: 'fade',
+            transformationMode: 'in-out'
+        },
+        computed: {
+            transformation () {
+        if (this.kisses < 3) {
+            return 'frog'
+        }
+        if (this.kisses >= 3 && this.kisses <= 5) {
+            this.transformationMode = 'out-in'
+            return 'princess'
+        }
+        if (this.kisses > 5) {
+            this.kindOfTransformation = 'zoom'
+            return 'santa'
+        }
+    },
+    emoji () {
+        switch (this.transformation) {
+            case 'frog': return '☃'
+            case 'princess': return '✪'
+            case 'santa': return '☫ '
+        }
+    }
+    }
+    })
+</script>
+</body>
+</html>

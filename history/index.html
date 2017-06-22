@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/vue-router.js"></script>
+    <style>
+        a.router-link-active, li.router-link-active>a {
+            background-color: gainsboro;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>Choppy's Restaurant</h1>
+    <ul>
+        <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/sports">Sports</router-link></li>
+        <li><router-link to="/fashion">Fashion</router-link></li>
+    </ul>
+    <router-view></router-view>
+</div>
+<script>
+    Vue.use(VueRouter);
+    const Sports = { template: `
+    <div>
+    <p v-for="i in 30">
+            Sample text about sports {{i}}.
+    </p>
+    <router-link to="/fashion">Go to Fashion</router-link>
+    <p v-for="i in 30">
+            Sample text about sports {{i + 30}}.
+    </p>
+    </div>
+    ` }
+    const Fashion = { template: `
+    <div>
+    <p v-for="i in 30">
+            Sample text about fashion {{i}}.
+    </p>
+    <router-link to="/sports">Go to Sports</router-link>
+    <p v-for="i in 30">
+            Sample text about fashion {{i + 30}}.
+    </p>
+    </div>
+    ` }
+    const Home = { template: '<div>Welcome to BBCCN</div>' }
+    const router = new VueRouter({
+        mode: 'history',
+        routes: [
+            { path: '/', component: Home },
+            { path: '/sports', component: Sports },
+            { path: '/fashion', component: Fashion }
+        ],
+    scrollBehavior (to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { x: 0, y: 0 }
+        }
+    }
+    });
+    new Vue({
+        router,
+        el: '#app'
+    })
+</script>
+
+</body>
+</html>

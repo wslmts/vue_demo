@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/vue-router.js"></script>
+
+    <style>
+        a.router-link-active, li.router-link-active>a {
+            background-color: gainsboro;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>Clothes for Humans</h1>
+    <ul>
+        <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/clothes">Clothes</router-link></li>
+    </ul>
+    <router-view></router-view>
+</div>
+<script>
+    Vue.use(VueRouter);
+    const Home = { template: '<div>Welcome to Clothes for Humans</div>' }
+    const Clothes = { template: '<div>Today we have shoes</div>' }
+    const Sales = { template: '<div>Up to 50% discounts! Buy!</div>' }
+    const router = new VueRouter({
+        routes: [
+            { path: '/', component: Home , redirect: '/last-year-sales'},
+            { path: '/clothes', component: Clothes },
+            { path: '/last-year-sales', component: Sales }
+        ]
+    })
+    new Vue({
+        router,
+        el: '#app'
+    });
+    //动态跳转
+   /* { path: '/air', component: Air },
+    { path: '/bags', name: 'bags', component: Bags },
+    { path: '/super-shirt/:size', component: SuperShirt },
+    { path: '/shirt/:size?', component: Shirt},
+    { path: '/shirts/:size?',
+            redirect: to => {
+        const { hash, params, query } = to
+        if (query.colour === 'transparent') {
+            return { path: '/air', query: null }
+        }
+        if (hash === '#prada') {
+            return { name: 'bags', hash: '' }
+        }
+        if (params.size > 10) {
+            return '/super-shirt/:size'
+        } else {
+            return '/shirt/:size?'
+        }
+    }
+    }*/
+</script>
+</body>
+</html>

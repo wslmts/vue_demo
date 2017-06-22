@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="animate.css">
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/velocity.js"></script>
+    <style>
+        .slideInRight {
+            transform: translateX(200px);
+        }
+        .go {
+            transition: all 2s ease-out;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <button @click="taxiCalled = true">
+        Call a cab
+    </button>
+    <button @click="taxiCalled = false">
+        Cancel
+    </button>
+    <transition enter-active-class="animated slideInRight">
+    <p v-if="taxiCalled">animate css</p>
+    </transition>
+    <transition enter-class="slideInRight" enter-active-class="go">
+        <p v-if="taxiCalled">custom css </p>
+    </transition>
+    <transition @enter="enter"  :css="false" @leave="leave">
+        <p v-if="taxiCalled">velocity js show</p>
+    </transition>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            taxiCalled: false
+        },
+        methods: {
+            enter (el) {
+        Velocity(el,
+                { opacity: [1, 0], translateX: ["0px", "200px"] },
+                { duration: 2000, easing: "ease-out" })
+    },
+   /* leave (el, done) {
+        /!*The trick lies in the second argument. Every hook calls a function with two
+         arguments. We have already seen the first,  el , which is the subject of the
+         animation. The second is a callback that when called, tells Vue that the
+         animation is finished.*!/
+        Velocity(el,
+                { opacity: [0, 1], 'font-size': ['0.1em', '1em'] },
+                { duration: 200 })
+    },*/
+    leave (el, done) {
+        Velocity(el,
+                { opacity: [0, 1], 'font-size': ['0.1em', '1em'] },
+                { duration: 200, complete: done })
+    }
+    }
+    })
+</script>
+<style>
+    img {
+        float: left;
+        padding: 5px
+    }
+    .v-enter {
+        opacity: 0
+    }
+    .v-enter-active {
+        transition: opacity 2s
+    }
+</style>
+<div id="app1">
+    <transition appear>
+        <img src="./img/ren.jpg" width="50" height="70">
+    </transition>
+    <p>
+        The internet was missing the ability to
+        provide custom-sized placeholder images of Bill Murray.
+        Now it can.
+    </p>
+</div>
+
+<script>
+    new Vue({ el: '#app1'});
+</script>
+<style>
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-active {
+        opacity: 0
+    }
+
+</style>
+<div id="app2">
+    we used the  key attribute specifying who is
+    the frog and who is the princess. This is because, Vue optimization system will
+    kick in otherwise. It will see that the content of the two elements can be
+    swapped without swapping the elements themselves and no transition will
+    ensue since the element was the same and only the content changed;
+    Using keys is generally recommended even when not necessary,
+    like in the preceding case. This is especially true when items
+    have a different semantic meaning. There are a couple of
+    reasons for this. The main reason is that when multiple people
+    work on the same line of code, modifying the  key attribute will
+    not break the application as easily as switching a  span element
+    back into a  p element, which will ruin the transition as we just
+    saw.
+    <button @click="kisses++"> Kiss!</button>
+    <transition name="fade">
+        <p v-if="kisses < 3" key="frog"> frog</p>
+        <p v-else-if="kisses >= 3 && kisses <= 5" key="princess"> princess</p>
+        <p v-else key="santa"> santa</p>
+    </transition>
+    <transition name="fade">
+        <p :key="transformation">{{emoji}}{{transformation}}</p>
+    </transition>
+</div>
+<script>
+    new Vue({
+        el: '#app2',
+        data: {
+            kisses: 0
+        },
+        computed: {
+            transformation () {
+        if (this.kisses < 3) {
+            return 'frog'
+        }
+        if (this.kisses >= 3 && this.kisses <= 5) {
+            return 'princess'
+        }
+        if (this.kisses > 5) {
+            return 'santa'
+        }
+    },
+    emoji () {
+        switch (this.transformation) {
+            case 'frog': return '青蛙 '
+            case 'princess': return '王子'
+            case 'santa': return '圣诞老人 '
+        }
+    }
+    }
+    });
+</script>
+<style>
+    .slide-enter-active, .slide-leave-active {
+        transition: transform .5s
+    }
+    .slide-enter {
+        transform: translateX(300px)
+    }
+    .slide-leave-active {
+        transform: translateX(-300px);
+    }
+</style>
+<div id="app3">
+    <p>To recapitulate, you have two different ways to manage transitions between
+        components in Vue. The default way is to start the in transition at the same time
+        with the out transition. We can make that explicit with the following:
+        <transition mode="in-out">
+            <!-- elements -->
+        </transition>
+        We can change this default behavior by waiting for the out part to be finished
+        before starting the in animation. We achieved it with the following:
+        <transition mode="out-in">
+            <!-- elements -->
+        </transition>
+        While the former is useful when elements have the absolute style position, the
+        latter is more relevant when we really need to wait to have a clear way before
+        putting more stuff on the page.
+        Absolute positioning won't care about having elements on top of each other
+        because they don't follow the flow of the page. On the other hand, static
+        positioning will append the second element after the first, making the transition
+        awkward if both the elements are shown at the same time.</p>
+    <button @click="product++">next</button>
+    <transition name="slide">
+        <p :key="products[product % 4]">{{products[product % 4]}}</p>
+    </transition>
+    <transition name="slide" mode="out-in">
+        <p :key="products[product%4]">{{products[product%4]}}</p>
+    </transition>
+</div>
+    <script>
+        new Vue({
+            el: '#app3',
+            data: {
+                product: 0,
+                products: [' umbrella', ' computer', ' ball', ' camera']
+            }
+        })
+    </script>
+<style>
+    .v-leave-active {
+        transition: all 1s;
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+</style>
+<div id="app4">
+    <h3>Syllabus</h3>
+        <transition-group tag="ul">
+            <li v-for="topic in syllabus" :key="topic">
+                <button @click="completed(topic)">Done</button>{{topic}}
+            </li>
+        </transition-group>
+</div>
+<script>
+    new Vue({
+        el: '#app4',
+        data: {
+            syllabus: [
+                'HTML',
+                'CSS',
+                'Scratch',
+                'JavaScript',
+                'Python'
+            ]
+        },
+        methods: {
+            completed (topic) {
+        let index = this.syllabus.indexOf(topic)
+        this.syllabus.splice(index, 1)
+    }
+    }
+    })
+</script>
+<style>
+    .station-leave-active, .station-enter-active {
+        transition: all 2s;
+        position: absolute;
+    }
+    .station-leave-to {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    .station-enter {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    .station-move {
+        transition: 2s;
+    }
+    span {
+        display: inline-block;
+        margin: 3px;
+    }
+</style>
+<div id="app5">
+    <h3>Bus station simulator</h3>
+    <transition-group tag="p" name="station">
+        <span v-for="bus in buses" :key="bus">☏</span>
+    </transition-group>
+</div>
+<script>
+    new Vue({
+        el: '#app5',
+        data: {
+            buses: [1,2,3,4,5],
+            nextBus: 6
+        },
+        mounted () {
+        setInterval(() => {
+            const headOrTail = () => Math.random() > 0.5
+        if (headOrTail()) {
+            this.buses.push(this.nextBus)
+            this.nextBus += 1
+        } else {
+            //this.buses.splice(0, 1)
+            this.buses.shift();
+        }
+    }, 2000)
+    }
+    })
+</script>
+<style>
+    .ball {
+        width: 3em;
+        height: 3em;
+        background-color: red;
+        border-radius: 50%;
+        position: absolute;
+        left: 10em;
+    }
+</style>
+<div id="app6">
+    <input type="number"  @input="move" >
+    <div class="ball" :style="'top: ' + height + 'em'"></div>
+</div>
+<script src="../lib/Tween.js"></script>
+<script>
+    new Vue({
+        el: '#app6',
+        data: {
+            height: 0
+        },
+        methods: {
+            move (event) {
+       // this.height=Number(event.target.value)
+        const newHeight = Number(event.target.value)
+        const _this = this
+        const animate = (time) => {
+            requestAnimationFrame(animate)
+            TWEEN.update(time)
+        }
+        new TWEEN.Tween({ H: this.height })
+                .easing(TWEEN.Easing.Bounce.Out)
+                .to({ H: newHeight }, 1000)
+                .onUpdate(function () {
+                    _this.height = this.H
+                })
+                .start()
+        animate()
+    }
+    }
+    })
+</script>
+ </body>
+</html>

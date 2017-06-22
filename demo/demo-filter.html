@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .ascending:after {
+            content: "\25B2"
+        }
+        .descending:after {
+            content: "\25BC"
+        }
+        .warn {
+            background-color: mistyrose
+        }
+    </style>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/accounting.js"></script>
+    <script src="../lib/moment-with-locales.js"></script>
+</head>
+<body>
+<div id="app">
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Country</th>
+            <th v-bind:class="order === 1 ? 'descending' : 'ascending'" @click="sort">Electricity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="dam in damsByElectricity">
+            <td>{{dam.name}}</td>
+            <td>{{dam.country}}</td>
+            <td>{{dam.electricity|dollars}} MegaWatts</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>time:{{bastilleStormingDate|date}}</p>
+    <p>time:{{bastilleStormingDate|date('fr')}}</p>
+</div>
+<script>
+    Vue.filter('dollars', function (money) {
+        return accounting.formatMoney(money)
+    });
+    Vue.filter('date', function (date, locale) {
+        moment.locale(locale)
+        return moment(date).format('LL')
+    })
+    new Vue({
+        el: '#app',
+        data: {
+            dams: [
+                {name: 'Nurek Dam', country: 'Tajikistan', electricity: 200},
+                {name: 'Three Gorges Dam', country: 'China', electricity: 250},
+                {name: 'Tarbela Dam', country: 'Pakistan', electricity: 350},
+                {name: 'Guri Dam', country: 'Venezuela', electricity: 100}
+            ],
+            bastilleStormingDate: '1789-07-14 17 h',
+            order: 1 // means ascending
+        },
+        computed: {
+            damsByElectricity () {
+        return this.dams.sort((d1, d2) =>
+                (d2.electricity - d1.electricity) * this.order);
+           }
+        },
+    methods: {
+        sort () {
+            this.order = this.order * -1
+        }
+    }
+    })
+</script>
+<div id="ghost">
+    <div v-show="isNight">
+        I'm a ghost! Boo!v-show
+    </div>
+    <div v-if="isNight">
+        I'm a ghost! Boo! v-if
+    </div>
+    <input type="button" value="change status" @click="changeone">
+</div>
+<script>
+    new Vue({
+        el: '#ghost',
+        data: {
+            isNight: true
+        },
+        methods:{
+            changeone:function(){
+               this.isNight=!this.isNight;
+            }
+        }
+    })
+</script>
+<div id="app1">
+<textarea  v-model="memeText"   :maxlength="limit" :class="{ warn: longText }">
+
+</textarea>
+    {{memeText.length}}
+    <div :class="classes" style="border:1px green solid">ss</div>
+</div>
+<script>
+    new Vue({
+        el: '#app1',
+        data: {
+            memeText: 'What if I told you CSS can do that',
+            limit: 50
+        },
+        computed: {
+            longText ()
+    {
+        if (this.limit - this.memeText.length <= 10) {
+            return true
+        } else {
+            return false
+        }
+    },
+    classes () {
+        const longText = this.limit - this.memeText.length <= 10
+        return {
+            warn:  this.memeText.length<this.limit
+        }
+    }
+    }
+    })
+</script>
+<style>
+    #solution {
+        cursor: pointer;
+    }
+    .fade-enter {
+        opacity: 0
+    }
+    .fade-enter-active {
+        transition: opacity .5s;
+    }
+</style>
+
+<div id="app2">
+    <article>
+        They call me fruit.<br>
+        They call me fish.<br>
+        They call me insect.<br>
+        But actually I'm not one of those.
+        <div id="solution" @click="showSolution = true">
+            I am a <transition name="fade">
+            <span id="dragon" v-show="showSolution">Dragon</span>
+        </transition>
+        </div>
+    </article>
+</div>
+<script>
+    new Vue({
+        el: '#app2',
+        data: {
+            showSolution: false
+        }
+    })
+</script>
+<style>
+    #solution {
+        cursor: pointer;
+    }
+    .fade-enter {
+        opacity: 0
+    }
+    .fade-enter-active {
+        transition: opacity .5s;
+    }
+</style>
+<div id="app3">
+    <p>
+        Transitions are awesome, careful<br/>
+        please don't use them always.
+    </p>
+    <transition name="fade">
+        <img id="tree"  src="img/QDpnaIE.png"      v-show="show"       @click="show = false"/>
+    </transition>
+</div>
+<script>
+    new Vue({
+        el: '#app3',
+        data: {
+            show: true
+        }
+    })
+</script>
+
+</body>
+</html>

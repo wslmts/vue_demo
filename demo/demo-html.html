@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+
+    </style>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app" v-html="htmlTexts[0]">
+    <!--{{htmlTexts[0]}}-->
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            htmlTexts: [
+                'Dear John,<br/>thank you for the <pre>Batman vs Superman</pre> DVD!<script>alert(1)<\/script>',
+                'Dear John,<br/>thank you for <i>Ghostbusters 3</i>!',
+                'Dear John,<br/>thanks, <b>Gods of Egypt</b> is my new favourite!'
+            ]
+        }
+    })
+</script>
+<div id="app1">
+    <thanks gift="Batman" decoration="strong"></thanks>
+</div>
+<script>
+    Vue.component('thanks', {
+        functional: true,
+        render: function (createElement, context) {
+            let decoratedGift =
+                    createElement(context.props.decoration, context.props.gift)
+            return createElement('p', ['Dear John, thanks for ', decoratedGift])
+        },
+        props: {
+            gift: String,
+            decoration: String
+        }
+    });
+    new Vue({
+        el: '#app1'
+    })
+</script>
+
+ </body>
+</html>
