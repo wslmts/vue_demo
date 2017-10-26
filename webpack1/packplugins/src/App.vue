@@ -1,0 +1,16 @@
+<template>
+<span id="shaker" class="shake">
+<link rel="stylesheet" type="text/css"
+href="https://csshake.surge.sh/csshake.min.css">
+<slot></slot>
+</span>
+</template>
+
+<script>
+export default {
+  name: 'app'
+}
+</script>
+
+<style>
+</style>

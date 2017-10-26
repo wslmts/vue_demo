@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+    <style>
+        @keyframes generateJump {
+            20%{transform: translateY(0);}
+            40%{transform: translateY(-30px);}
+            50%{transform: translateY(0);}
+            60%{transform: translateY(-15px);}
+            80%{transform: translateY(0);}
+        }
+        .kangaroo {
+            animation: generateJump 1.5s ease 0s 2 normal;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>Welcome to the Kangaroo club</h1>
+    <img v-kangaroo src="img/timg.jpg" width="300px" height="200px">
+    <img v-kangaroo src="img/timg1.jpg" width="300px" height="200px">
+    <p v-kangaroo>We love kangaroos</p>
+</div>
+<script>
+    const jump = el => {
+        el.classList.add('kangaroo')
+        el.addEventListener('animationend', () => {
+            el.classList.remove('kangaroo')
+      })
+    }
+    const doOnRandomElement = (action, collection) => {
+        if (collection.length === 0) {
+            return
+        }
+        const el =collection[Math.floor(Math.random()*collection.length)]
+        action(el)
+    }
+    const atRandomIntervals = action => {
+        setTimeout(() => {
+            action()
+            atRandomIntervals(action)
+        }, Math.round(Math.random() * 6000))
+    }
+    const Kangaroo = {
+        install (vueInstance) {
+            vueInstance.kangaroos = []
+            vueInstance.directive('kangaroo', {
+            bind (el) {
+               vueInstance.kangaroos.push(el)
+            }
+        })
+            atRandomIntervals(() =>doOnRandomElement(jump, vueInstance.kangaroos))
+        }
+    }
+    Vue.use(Kangaroo)
+    new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

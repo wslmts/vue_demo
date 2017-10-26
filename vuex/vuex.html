@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/vue-router.js"></script>
+    <script src="../lib/vuex.js"></script>
+</head>
+<body>
+<div id="app">
+    <div v-for="(message, index) in messages">
+        <p style="cursor:pointer">{{message}}
+            <span @click="close(index)">[x]</span>
+        </p>
+    </div>
+    <input v-model="newMessage" @keyUp.enter="broadcast">
+    <button @click="broadcast">Broadcast</button>
+</div>
+<script>
+    const store = new Vuex.Store({
+        state: {
+            messages: []
+        },
+        mutations: {
+            pushMessage (state, message) {
+               state.messages.push(message)
+            },
+            removeMessage (state, index) {
+                state.messages.splice(index, 1)
+            }
+        }
+    });
+    new Vue({
+        store,
+        el: '#app',
+        data: {
+            newMessage: ''
+        },
+        computed: Vuex.mapState(['messages']),
+        methods: {
+            broadcast () {
+               store.commit('pushMessage', this.newMessage)
+               this.newMessage = ''
+            },
+            close (index) {
+             store.commit('removeMessage', index)
+            }
+      }
+    })
+</script>
+
+</body>
+</html>

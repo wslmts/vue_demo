@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title></title>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app"></div>
+<script>
+    //假设是外部引用的
+    const Greeter = {
+        template: '<p>Hello World</p>'
+    }
+    new Vue({
+        el: '#app',
+        render: h=>h(Greeter)
+    })
+</script>
+<div id="app1"></div>
+<script>
+    //纯手写生成组件
+    new Vue({
+                el: '#app1',
+                render: h => h(
+                    'div',
+                    [
+                        h('h1', 'The plumber club page'),
+                        h({ render: function (h) {
+                                        const self = this
+                                        return h('div', [
+                                            'Your name is ',
+                                            h('input', {
+                                                domProps: {
+                                                    value: self.name
+                                                },
+                                                on: {
+                                                       input (event) {
+                                                       self.name = event.target.value
+                                                    }
+                                                }
+                                            }),
+                                        h( 'p', 'Hello ' + self.name +(self.exclamation ? '!' : ''))
+                                        ])
+                                    },
+                          data () { return { name: '' } },
+                          props: ['exclamation']
+                         },
+                 {
+                    props: {
+                        exclamation: true
+                    }
+                 }
+               )
+             ]
+            )
+    })
+</script>
+<div id="app2">
+    <orange-line>
+        moveTo 100 30 traceLine 200 30 traceLine 150 120 closePath
+    </orange-line>
+</div>
+<script>
+    const OrangeLine = {
+        functional: true,
+        render (h, context) {
+        console.log(context)
+        return h('svg',
+                [
+                    h('path', {
+                        attrs: {
+                                    d: context.children.map(c => {
+                                        return c.text
+                                                .replace(/moveTo/g, 'M')
+                                                .replace(/traceLine/g, 'L')
+                                                .replace(/closePath/g, 'z')
+                                    }).join(' ').trim(),
+                                   fill: 'black',
+                                   stroke: 'orange',
+                                  'stroke-width': '4'
+                                 }
+                     })
+               ]
+         )
+        }
+ }
+    new Vue({
+        el: '#app2',
+        components: {
+            OrangeLine
+        }
+    })
+</script>
+<div id="app3">
+    <h1>Breeds</h1>
+    <breed-table :breeds="breeds"></breed-table>
+</div>
+<script>
+    const DesktopTable = {
+        template: `
+    <table class="ui celled table unstackable">
+            <thead>
+            <tr>
+            <th>Breed</th>
+            <th>Coat Colour</th>
+    <th>Level of Affection</th>
+    <th>Level of Shedding</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="breed in breeds">
+            <td>{{breed.name}}</td>
+    <td>{{breed.colour}}</td>
+    <td>{{breed.affection}}</td>
+    <td>{{breed.shedding}}</td>
+    </tr>
+    </tbody>
+    </table>
+    `,
+    props: ['breeds']
+    }
+
+    const BreedTable = {
+        functional: true,
+        render(h, context) {
+        if (context.parent.width > 400) {
+            return h(DesktopTable, context.data, context.children)
+        } else {
+            return h(MobileTable, context.data, context.children)
+        }
+    }
+    };
+    const MobileTable = {
+        template: `
+            <table class="ui celled table unstackable">
+                <thead>
+                <tr>
+                <th>Breed</th>
+                <th>Affection & Shedding</th>
+                </tr>
+                </thead>
+            <tbody>
+                <tr v-for="breed in breeds">
+                    <td>{{breed.name}}
+                         <div class="ui mini circular image"  :style="'height:35px;background-color:'+breed.colour" ></div>
+                    </td>
+                    <td>
+                    <div class="ui heart rating">
+                        <i v-for="n in 5"  class="icon" :class="{ active: n <= breed.affection }" ></i>
+                    </div>
+                    <div class="ui star rating">
+                        <i v-for="n in 5"  class="icon" :class="{ active: n <= breed.shedding }" ></i>
+                    </div>
+                    </td>
+                </tr>
+            </tbody>
+            </table>`,
+    props: ['breeds']
+    };
+    new Vue({
+        el: '#app3',
+        data: {
+            width: document.body.clientWidth,
+            breeds: [
+                { name: 'Persian', colour: 'orange', affection: 3, shedding: 5 },
+                { name: 'Siberian', colour: 'blue', affection: 5, shedding: 4 },
+                { name: 'Bombay', colour: 'black', affection: 4, shedding: 2 }
+            ]
+        },
+        created() {
+        window.onresize = event => {
+            this.width = document.body.clientWidth
+        }
+    },
+    components: {
+        BreedTable
+    }
+    })
+</script>
+</body>
+</html>
